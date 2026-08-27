@@ -1,0 +1,173 @@
+<?php
+/**
+ * Theme Customizer settings.
+ *
+ * @package KeralamLiveNews
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+function klm_customize_register( $wp_customize ) {
+
+	/* ---------- Header ---------- */
+	$wp_customize->add_section(
+		'klm_header',
+		array(
+			'title'    => __( 'Header', 'keralamlivenews' ),
+			'priority' => 25,
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_header_weather', array( 'default' => '28°C Kochi', 'sanitize_callback' => 'sanitize_text_field' ) );
+	$wp_customize->add_control(
+		'klm_header_weather',
+		array(
+			'label'       => __( 'Left side text (temperature/city)', 'keralamlivenews' ),
+			'description' => __( 'Shown at the top-left of the header, e.g. "28°C Kochi".', 'keralamlivenews' ),
+			'section'     => 'klm_header',
+			'type'        => 'text',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_header_show_date', array( 'default' => true, 'sanitize_callback' => 'klm_sanitize_checkbox' ) );
+	$wp_customize->add_control(
+		'klm_header_show_date',
+		array(
+			'label'   => __( "Show today's date under the logo", 'keralamlivenews' ),
+			'section' => 'klm_header',
+			'type'    => 'checkbox',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_header_right_text', array( 'default' => '', 'sanitize_callback' => 'sanitize_text_field' ) );
+	$wp_customize->add_control(
+		'klm_header_right_text',
+		array(
+			'label'       => __( 'Right side text (optional)', 'keralamlivenews' ),
+			'description' => __( 'Shown at the top-right of the header, next to the search icon.', 'keralamlivenews' ),
+			'section'     => 'klm_header',
+			'type'        => 'text',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_header_show_search', array( 'default' => true, 'sanitize_callback' => 'klm_sanitize_checkbox' ) );
+	$wp_customize->add_control(
+		'klm_header_show_search',
+		array(
+			'label'   => __( 'Show search icon in header', 'keralamlivenews' ),
+			'section' => 'klm_header',
+			'type'    => 'checkbox',
+		)
+	);
+
+	/* ---------- Single post display ---------- */
+	$wp_customize->add_section(
+		'klm_single',
+		array(
+			'title'    => __( 'Single Post Display', 'keralamlivenews' ),
+			'priority' => 30,
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_single_show_author', array( 'default' => true, 'sanitize_callback' => 'klm_sanitize_checkbox' ) );
+	$wp_customize->add_control(
+		'klm_single_show_author',
+		array(
+			'label'   => __( 'Show author name on posts', 'keralamlivenews' ),
+			'section' => 'klm_single',
+			'type'    => 'checkbox',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_single_show_date', array( 'default' => true, 'sanitize_callback' => 'klm_sanitize_checkbox' ) );
+	$wp_customize->add_control(
+		'klm_single_show_date',
+		array(
+			'label'   => __( 'Show publish date on posts', 'keralamlivenews' ),
+			'section' => 'klm_single',
+			'type'    => 'checkbox',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_single_show_readtime', array( 'default' => true, 'sanitize_callback' => 'klm_sanitize_checkbox' ) );
+	$wp_customize->add_control(
+		'klm_single_show_readtime',
+		array(
+			'label'   => __( 'Show "N min read"', 'keralamlivenews' ),
+			'section' => 'klm_single',
+			'type'    => 'checkbox',
+		)
+	);
+
+	/* ---------- Colors ---------- */
+	$wp_customize->add_section(
+		'klm_colors',
+		array(
+			'title'    => __( 'Theme Colors', 'keralamlivenews' ),
+			'priority' => 35,
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_color_primary', array( 'default' => '#cc0000', 'sanitize_callback' => 'sanitize_hex_color' ) );
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'klm_color_primary',
+			array(
+				'label'       => __( 'Primary / accent color', 'keralamlivenews' ),
+				'description' => __( 'Used for section headings like "The Lead", the nav bar and buttons.', 'keralamlivenews' ),
+				'section'     => 'klm_colors',
+			)
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_color_link', array( 'default' => '#0b5ed7', 'sanitize_callback' => 'sanitize_hex_color' ) );
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'klm_color_link',
+			array(
+				'label'   => __( 'Link color', 'keralamlivenews' ),
+				'section' => 'klm_colors',
+			)
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_color_bg', array( 'default' => '#ffffff', 'sanitize_callback' => 'sanitize_hex_color' ) );
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'klm_color_bg',
+			array(
+				'label'   => __( 'Site background color', 'keralamlivenews' ),
+				'section' => 'klm_colors',
+			)
+		)
+	);
+
+	/* ---------- Footer ---------- */
+	$wp_customize->add_section(
+		'klm_footer',
+		array(
+			'title'    => __( 'Footer', 'keralamlivenews' ),
+			'priority' => 40,
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_footer_credit', array( 'default' => __( 'Made with love by Tahseen Ashrafi', 'keralamlivenews' ), 'sanitize_callback' => 'sanitize_text_field' ) );
+	$wp_customize->add_control(
+		'klm_footer_credit',
+		array(
+			'label'   => __( 'Bottom credit line', 'keralamlivenews' ),
+			'section' => 'klm_footer',
+			'type'    => 'text',
+		)
+	);
+}
+add_action( 'customize_register', 'klm_customize_register' );
+
+function klm_sanitize_checkbox( $checked ) {
+	return (bool) $checked;
+}

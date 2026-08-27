@@ -1,0 +1,60 @@
+/*
+Theme Name: KeralamLiveNews
+Theme URI: https://github.com/tahseenashrafi/keralamlivenews
+Author: Tahseen Ashrafi
+Author URI: https://github.com/tahseenashrafi
+Description: A fast, widget-driven Malayalam/Kerala news theme. Every homepage section (The Lead, In The News, Mangalam Specials, Today's Mangalam, Entertainment, Inside Mangalam, Health, News in Reels, Photo Gallery) and the sidebar are powered by a flexible "News Category Block" widget, so category, post count, author and date display can all be set from Appearance → Widgets without touching code.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.6
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: keralamlivenews
+Tags: news, blog, one-column, two-columns, right-sidebar, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
+
+KeralamLiveNews WordPress Theme, Copyright 2026 Tahseen Ashrafi
+KeralamLiveNews is distributed under the terms of the GNU General Public License v2 or later.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+*/
+
+/* -----------------------------------------------------------
+   Base reset + tokens. Section-by-section design lives in
+   assets/css/custom.css - this file only carries the WP-required
+   header above plus the minimum reset so the theme still looks
+   sane if custom.css fails to enqueue.
+------------------------------------------------------------ */
+:root{
+  --klm-primary:#cc0000;
+  --klm-primary-dark:#a30000;
+  --klm-text:#1a1a1a;
+  --klm-muted:#6b6b6b;
+  --klm-border:#e4e4e4;
+  --klm-bg:#ffffff;
+  --klm-bg-alt:#f6f6f6;
+  --klm-link:#0b5ed7;
+  --klm-font-body:"Noto Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  --klm-font-head:"Noto Sans",Georgia,"Times New Roman",serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  font-family:var(--klm-font-body);
+  color:var(--klm-text);
+  background:var(--klm-bg);
+  line-height:1.5;
+}
+img{max-width:100%;height:auto;display:block;}
+a{color:var(--klm-link);text-decoration:none;}
+a:hover{text-decoration:underline;}
+ul{margin:0;padding:0;list-style:none;}
+h1,h2,h3,h4,h5,h6{font-family:var(--klm-font-head);margin:0 0 .5em;line-height:1.25;}
+.screen-reader-text{position:absolute!important;left:-9999px;top:-9999px;}
+:focus-visible{outline:3px solid var(--klm-primary);outline-offset:2px;}
+.container{max-width:1200px;margin:0 auto;padding:0 16px;}
+button{font-family:inherit;cursor:pointer;}
