@@ -35,7 +35,7 @@
 			} );
 		}
 
-		/* Tabs (Today's Mangalam style widgets) */
+		/* Tabs (Today's Keralam style widgets) */
 		document.querySelectorAll( '.klm-tabs' ).forEach( function ( tabs ) {
 			var buttons = tabs.querySelectorAll( '.klm-tabs__btn' );
 			buttons.forEach( function ( btn ) {

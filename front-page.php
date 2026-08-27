@@ -30,10 +30,10 @@ $has_sidebar = klm_has_sidebar();
 
 		<?php
 		$full_width_blocks = array(
-			'homepage-mangalam-special',
-			'homepage-todays-mangalam',
+			'homepage-keralam-special',
+			'homepage-todays-keralam',
 			'homepage-entertainment',
-			'homepage-inside-mangalam',
+			'homepage-inside-keralam',
 			'homepage-health',
 			'homepage-video',
 			'homepage-gallery',

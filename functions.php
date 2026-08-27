@@ -64,10 +64,10 @@ function klm_widgets_init() {
 	$blocks = array(
 		'homepage-lead'            => __( 'Homepage: The Lead (left column)', 'keralamlivenews' ),
 		'homepage-in-the-news'     => __( 'Homepage: In The News (right of Lead)', 'keralamlivenews' ),
-		'homepage-mangalam-special'=> __( 'Homepage: Mangalam Specials', 'keralamlivenews' ),
-		'homepage-todays-mangalam' => __( 'Homepage: Today\'s Mangalam (tabs)', 'keralamlivenews' ),
+		'homepage-keralam-special' => __( 'Homepage: Keralam Specials', 'keralamlivenews' ),
+		'homepage-todays-keralam'  => __( 'Homepage: Today\'s Keralam (tabs)', 'keralamlivenews' ),
 		'homepage-entertainment'   => __( 'Homepage: Entertainment', 'keralamlivenews' ),
-		'homepage-inside-mangalam' => __( 'Homepage: Inside Mangalam (4 columns)', 'keralamlivenews' ),
+		'homepage-inside-keralam'  => __( 'Homepage: Inside Keralam (4 columns)', 'keralamlivenews' ),
 		'homepage-health'          => __( 'Homepage: Health', 'keralamlivenews' ),
 		'homepage-video'           => __( 'Homepage: News in Reels (video)', 'keralamlivenews' ),
 		'homepage-gallery'         => __( 'Homepage: Photo Gallery', 'keralamlivenews' ),
