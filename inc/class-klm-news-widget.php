@@ -30,13 +30,14 @@ class KLM_News_Widget extends WP_Widget {
 
 	private function layouts() {
 		return array(
-			'lead'     => __( 'Lead (1 big + 2 small) — e.g. "The Lead"', 'keralamlivenews' ),
-			'list'     => __( 'Simple list — e.g. "In The News"', 'keralamlivenews' ),
-			'magazine' => __( 'Magazine (1 big + side + row) — e.g. "Mangalam Specials", "Entertainment", "Health"', 'keralamlivenews' ),
-			'tabs'     => __( 'Tabbed categories — e.g. "Today\'s Mangalam"', 'keralamlivenews' ),
-			'fourcol'  => __( 'Four equal columns — e.g. "Inside Mangalam"', 'keralamlivenews' ),
-			'video'    => __( 'Video strip — e.g. "News in Reels"', 'keralamlivenews' ),
-			'gallery'  => __( 'Photo gallery strip', 'keralamlivenews' ),
+			'lead'          => __( 'Lead (1 big + 4 cards) — e.g. "The Lead"', 'keralamlivenews' ),
+			'list'          => __( 'Simple list — e.g. "In The News"', 'keralamlivenews' ),
+			'sidebar_cards' => __( 'Featured Sidebar (Big top image + list + Big bottom image)', 'keralamlivenews' ),
+			'magazine'      => __( 'Magazine (1 big + side + row) — e.g. "Keralam Specials", "Entertainment", "Health"', 'keralamlivenews' ),
+			'tabs'          => __( 'Tabbed categories — e.g. "Today\'s Keralam"', 'keralamlivenews' ),
+			'fourcol'       => __( 'Four equal columns — e.g. "Inside Keralam"', 'keralamlivenews' ),
+			'video'         => __( 'Video strip — e.g. "News in Reels"', 'keralamlivenews' ),
+			'gallery'       => __( 'Photo gallery strip', 'keralamlivenews' ),
 		);
 	}
 
@@ -164,6 +165,9 @@ class KLM_News_Widget extends WP_Widget {
 			case 'lead':
 				$this->render_lead( $category, $count, $show_author, $show_date, $show_excerpt );
 				break;
+			case 'sidebar_cards':
+				$this->render_sidebar_cards( $category, $count, $show_author, $show_date, $show_excerpt );
+				break;
 			case 'magazine':
 				$this->render_magazine( $category, $count, $show_author, $show_date, $show_excerpt );
 				break;
@@ -199,8 +203,64 @@ class KLM_News_Widget extends WP_Widget {
 		);
 	}
 
-	private function render_lead( $category, $count, $show_author, $show_date, $show_excerpt ) {
+	private function render_sidebar_cards( $category, $count, $show_author, $show_date, $show_excerpt ) {
 		$q = $this->query( $category, max( 3, $count ) );
+		if ( ! $q->have_posts() ) {
+			return;
+		}
+		$total = $q->post_count;
+		$i = 0;
+		echo '<div class="klm-sidebar-cards">';
+		while ( $q->have_posts() ) {
+			$q->the_post();
+			if ( 0 === $i ) {
+				echo '<article class="klm-sidebar-cards__top">';
+				echo '<a href="' . esc_url( get_permalink() ) . '">';
+				klm_thumbnail( get_the_ID(), 'klm-lead', 'klm-sidebar-cards__big-img' );
+				echo '<h3 class="klm-sidebar-cards__title">' . esc_html( get_the_title() ) . '</h3>';
+				echo '</a>';
+				if ( $show_excerpt ) {
+					echo '<p class="klm-sidebar-cards__excerpt">' . esc_html( wp_trim_words( get_the_excerpt(), 18 ) ) . '</p>';
+				}
+				klm_post_meta( $show_author, $show_date );
+				echo '</article>';
+				if ( $total > 1 ) {
+					echo '<ul class="klm-list klm-sidebar-cards__list">';
+				}
+			} elseif ( $i < $total - 1 || 1 === $total - 1 ) {
+				echo '<li class="klm-list__item">';
+				echo '<a href="' . esc_url( get_permalink() ) . '" class="klm-list__link">';
+				echo '<span class="klm-list__title">' . esc_html( get_the_title() ) . '</span>';
+				klm_thumbnail( get_the_ID(), 'klm-small', 'klm-list__img' );
+				echo '</a>';
+				if ( $show_author || $show_date ) {
+					klm_post_meta( $show_author, $show_date );
+				}
+				echo '</li>';
+			} else {
+				echo '</ul>'; // close klm-sidebar-cards__list
+				echo '<article class="klm-sidebar-cards__bottom">';
+				echo '<a href="' . esc_url( get_permalink() ) . '">';
+				klm_thumbnail( get_the_ID(), 'klm-lead', 'klm-sidebar-cards__big-img' );
+				echo '<h3 class="klm-sidebar-cards__title">' . esc_html( get_the_title() ) . '</h3>';
+				echo '</a>';
+				if ( $show_excerpt ) {
+					echo '<p class="klm-sidebar-cards__excerpt">' . esc_html( wp_trim_words( get_the_excerpt(), 18 ) ) . '</p>';
+				}
+				klm_post_meta( $show_author, $show_date );
+				echo '</article>';
+			}
+			$i++;
+		}
+		if ( $total > 1 && $i === $total && $total < 3 ) {
+			echo '</ul>';
+		}
+		echo '</div>';
+		wp_reset_postdata();
+	}
+
+	private function render_lead( $category, $count, $show_author, $show_date, $show_excerpt ) {
+		$q = $this->query( $category, max( 5, $count ) );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -209,28 +269,48 @@ class KLM_News_Widget extends WP_Widget {
 		while ( $q->have_posts() ) {
 			$q->the_post();
 			if ( 0 === $i ) {
-				echo '<article class="klm-lead__main">';
+				echo '<article class="klm-lead__top">';
 				echo '<a href="' . esc_url( get_permalink() ) . '">';
-				klm_thumbnail( get_the_ID(), 'klm-lead', 'klm-lead__img' );
-				echo '<h3>' . esc_html( get_the_title() ) . '</h3>';
+				klm_thumbnail( get_the_ID(), 'klm-lead', 'klm-lead__top-img' );
+				echo '<h2 class="klm-lead__top-title">' . esc_html( get_the_title() ) . '</h2>';
+				echo '</a>';
+				if ( $show_excerpt ) {
+					echo '<p class="klm-lead__excerpt">' . esc_html( wp_trim_words( get_the_excerpt(), 28 ) ) . '</p>';
+				}
+				klm_post_meta( $show_author, $show_date );
+				echo '</article>';
+				echo '<div class="klm-lead__row">';
+			} elseif ( $i >= 1 && $i <= 4 ) {
+				echo '<article class="klm-lead__card">';
+				echo '<a href="' . esc_url( get_permalink() ) . '">';
+				klm_thumbnail( get_the_ID(), 'klm-square', 'klm-lead__card-img' );
+				echo '<h4 class="klm-lead__card-title">' . esc_html( get_the_title() ) . '</h4>';
+				echo '</a>';
+				if ( $show_author || $show_date ) {
+					klm_post_meta( $show_author, $show_date );
+				}
+				echo '</article>';
+			} else {
+				if ( 5 === $i ) {
+					echo '</div>'; // close klm-lead__row
+				}
+				echo '<article class="klm-lead__extra">';
+				echo '<a href="' . esc_url( get_permalink() ) . '">';
+				klm_thumbnail( get_the_ID(), 'klm-lead', 'klm-lead__extra-img' );
+				echo '<h3 class="klm-lead__extra-title">' . esc_html( get_the_title() ) . '</h3>';
 				echo '</a>';
 				if ( $show_excerpt ) {
 					echo '<p class="klm-lead__excerpt">' . esc_html( wp_trim_words( get_the_excerpt(), 24 ) ) . '</p>';
 				}
 				klm_post_meta( $show_author, $show_date );
 				echo '</article>';
-				echo '<div class="klm-lead__side">';
-			} else {
-				echo '<article class="klm-lead__side-item">';
-				echo '<a href="' . esc_url( get_permalink() ) . '">';
-				klm_thumbnail( get_the_ID(), 'klm-small', 'klm-lead__side-img' );
-				echo '<span>' . esc_html( get_the_title() ) . '</span>';
-				echo '</a>';
-				echo '</article>';
 			}
 			$i++;
 		}
-		echo '</div></div>';
+		if ( $i >= 1 && $i <= 4 ) {
+			echo '</div>'; // close klm-lead__row if total posts <= 4
+		}
+		echo '</div>';
 		wp_reset_postdata();
 	}
 

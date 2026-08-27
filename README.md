@@ -3,8 +3,8 @@
 By **Tahseen Ashrafi**
 
 A widget-driven Kerala/Malayalam news theme. Every homepage section (The Lead,
-In The News, Mangalam Specials, Today's Mangalam, Entertainment, Inside
-Mangalam, Health, News in Reels, Photo Gallery) plus the right sidebar is
+In The News, Keralam Specials, Today's Keralam, Entertainment, Inside
+Keralam, Health, News in Reels, Photo Gallery) plus the right sidebar is
 powered by one flexible **"News Category Block"** widget — so you assign the
 category, number of posts, and author/date visibility yourself from
 **Appearance → Widgets**, with no code edits.
@@ -25,7 +25,7 @@ category, number of posts, and author/date visibility yourself from
 
 Go to **Appearance → Widgets**. You'll see one widget area per homepage
 section, e.g. *"Homepage: The Lead (left column)"*, *"Homepage: In The News"*,
-*"Homepage: Mangalam Specials"*, etc., plus *"Right Sidebar (used
+*"Homepage: Keralam Specials"*, etc., plus *"Right Sidebar (used
 site-wide)"*.
 
 For each one:
@@ -34,7 +34,7 @@ For each one:
    Four columns / Video strip / Photo gallery strip) — matched to what that
    section looked like in the reference site.
 3. Pick the **Category** (or, for the "Tabbed categories" layout used by
-   Today's Mangalam, pick 2–5 categories — one becomes a tab).
+   Today's Keralam, pick 2–5 categories — one becomes a tab).
 4. Set **Number of posts**.
 5. Tick/untick **Show author name** and **Show post date**.
 6. Save.
