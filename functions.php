@@ -120,12 +120,14 @@ require KLM_DIR . '/inc/customizer.php';
 require KLM_DIR . '/inc/template-functions.php';
 require KLM_DIR . '/inc/class-klm-news-widget.php';
 require KLM_DIR . '/inc/class-klm-ad-widget.php';
+require KLM_DIR . '/inc/class-klm-social-widget.php';
 require KLM_DIR . '/inc/meta-boxes.php';
 
 /** Register the custom widgets. */
 function klm_register_widgets() {
 	register_widget( 'KLM_News_Widget' );
 	register_widget( 'KLM_Ad_Widget' );
+	register_widget( 'KLM_Social_Widget' );
 }
 add_action( 'widgets_init', 'klm_register_widgets' );
 

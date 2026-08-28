@@ -14,6 +14,46 @@ if ( ! defined( 'ABSPATH' ) ) {
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<?php if ( is_singular() && get_option( 'thread_comments' ) ) wp_enqueue_script( 'comment-reply' ); ?>
+
+	<?php
+	// Dynamic SEO Meta Tags
+	$seo_title       = is_singular() ? get_the_title() : get_bloginfo( 'name' ) . ' - ' . get_bloginfo( 'description' );
+	$seo_description = is_singular() ? wp_strip_all_tags( get_the_excerpt() ) : get_bloginfo( 'description' );
+	$seo_url         = is_singular() ? get_permalink() : home_url( '/' );
+	$seo_image       = is_singular() && has_post_thumbnail() ? get_the_post_thumbnail_url( get_the_ID(), 'full' ) : get_header_image();
+	?>
+	<title><?php echo esc_html( $seo_title ); ?></title>
+	<meta name="description" content="<?php echo esc_attr( wp_trim_words( $seo_description, 30 ) ); ?>">
+	<link rel="canonical" href="<?php echo esc_url( $seo_url ); ?>">
+
+	<!-- OpenGraph SEO -->
+	<meta property="og:locale" content="ml_IN">
+	<meta property="og:type" content="<?php echo is_singular() ? 'article' : 'website'; ?>">
+	<meta property="og:title" content="<?php echo esc_attr( $seo_title ); ?>">
+	<meta property="og:description" content="<?php echo esc_attr( wp_trim_words( $seo_description, 30 ) ); ?>">
+	<meta property="og:url" content="<?php echo esc_url( $seo_url ); ?>">
+	<meta property="og:site_name" content="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+	<?php if ( $seo_image ) : ?>
+		<meta property="og:image" content="<?php echo esc_url( $seo_image ); ?>">
+	<?php endif; ?>
+
+	<!-- Twitter Card SEO -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="<?php echo esc_attr( $seo_title ); ?>">
+	<meta name="twitter:description" content="<?php echo esc_attr( wp_trim_words( $seo_description, 30 ) ); ?>">
+
+	<!-- Schema.org NewsMediaOrganization -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "NewsMediaOrganization",
+		"name": "<?php echo esc_js( get_bloginfo( 'name' ) ); ?>",
+		"url": "<?php echo esc_js( home_url( '/' ) ); ?>",
+		"logo": "<?php echo esc_js( $seo_image ); ?>"
+	}
+	</script>
+
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -41,6 +81,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<div class="klm-header__right">
+			<div id="google_translate_element" class="klm-translate-box"></div>
+			<script type="text/javascript">
+			function googleTranslateElementInit() {
+				new google.translate.TranslateElement({
+					pageLanguage: 'ml',
+					includedLanguages: 'en,ml',
+					layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+				}, 'google_translate_element');
+			}
+			</script>
+			<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+
 			<?php if ( get_theme_mod( 'klm_header_right_text', '' ) ) : ?>
 				<span class="klm-header__right-text"><?php echo esc_html( get_theme_mod( 'klm_header_right_text' ) ); ?></span>
 			<?php endif; ?>
