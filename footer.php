@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="klm-footer__bottom">
 		<div class="container klm-footer__bottom-inner">
 			<span>&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'keralamlivenews' ); ?></span>
-			<span class="klm-footer__credit"><?php echo esc_html( get_theme_mod( 'klm_footer_credit', __( 'Made with love by Tahseen Ashrafi', 'keralamlivenews' ) ) ); ?></span>
+			<span class="klm-footer__credit"><?php echo esc_html( get_theme_mod( 'klm_footer_credit', __( 'Made with ❤️ by Tahseen Ashrafi', 'keralamlivenews' ) ) ); ?></span>
 		</div>
 	</div>
 </footer>

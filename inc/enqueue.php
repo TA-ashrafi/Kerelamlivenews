@@ -29,17 +29,19 @@ function klm_enqueue_assets() {
 	}
 
 	/* Color and border-radius settings from the Customizer become CSS variables, printed inline. */
-	$primary = get_theme_mod( 'klm_color_primary', '#cc0000' );
-	$link    = get_theme_mod( 'klm_color_link', '#0b5ed7' );
-	$bg      = get_theme_mod( 'klm_color_bg', '#ffffff' );
-	$radius  = get_theme_mod( 'klm_border_radius', 4 );
+	$primary     = get_theme_mod( 'klm_color_primary', '#cc0000' );
+	$link        = get_theme_mod( 'klm_color_link', '#0b5ed7' );
+	$bg          = get_theme_mod( 'klm_color_bg', '#ffffff' );
+	$radius      = get_theme_mod( 'klm_border_radius', 4 );
+	$logo_radius = get_theme_mod( 'klm_logo_border_radius', 0 );
 
 	$custom_css = sprintf(
-		':root{--klm-primary:%1$s;--klm-primary-dark:%1$s;--klm-link:%2$s;--klm-bg:%3$s;--klm-radius:%4$dpx;}',
+		':root{--klm-primary:%1$s;--klm-primary-dark:%1$s;--klm-link:%2$s;--klm-bg:%3$s;--klm-radius:%4$dpx;--klm-logo-radius:%5$dpx;}',
 		esc_html( $primary ),
 		esc_html( $link ),
 		esc_html( $bg ),
-		absint( $radius )
+		absint( $radius ),
+		absint( $logo_radius )
 	);
 	wp_add_inline_style( 'klm-style', $custom_css );
 }

@@ -16,7 +16,7 @@ class KLM_News_Widget extends WP_Widget {
 			'klm_news_widget',
 			__( 'News Category Block', 'keralamlivenews' ),
 			array(
-				'description' => __( 'Display posts from any category with custom grid layouts, offset controls, author & date toggles.', 'keralamlivenews' ),
+				'description' => __( 'Display posts from any category with custom grid layouts, offset controls, author & date toggles, and individual border-radius control.', 'keralamlivenews' ),
 			)
 		);
 	}
@@ -39,15 +39,16 @@ class KLM_News_Widget extends WP_Widget {
 	/* ADMIN FORM                                                        */
 	/* ---------------------------------------------------------------- */
 	public function form( $instance ) {
-		$title        = isset( $instance['title'] ) ? $instance['title'] : '';
-		$layout       = isset( $instance['layout'] ) ? $instance['layout'] : 'list';
-		$category     = isset( $instance['category'] ) ? (int) $instance['category'] : 0;
-		$count        = isset( $instance['count'] ) ? (int) $instance['count'] : 5;
-		$offset       = isset( $instance['offset'] ) ? (int) $instance['offset'] : 0;
-		$show_author  = ! empty( $instance['show_author'] );
-		$show_date    = ! empty( $instance['show_date'] );
-		$show_excerpt = ! empty( $instance['show_excerpt'] );
-		$view_all     = isset( $instance['view_all'] ) ? (bool) $instance['view_all'] : true;
+		$title         = isset( $instance['title'] ) ? $instance['title'] : '';
+		$layout        = isset( $instance['layout'] ) ? $instance['layout'] : 'list';
+		$category      = isset( $instance['category'] ) ? (int) $instance['category'] : 0;
+		$count         = isset( $instance['count'] ) ? (int) $instance['count'] : 5;
+		$offset        = isset( $instance['offset'] ) ? (int) $instance['offset'] : 0;
+		$border_radius = isset( $instance['border_radius'] ) ? (int) $instance['border_radius'] : 4;
+		$show_author   = ! empty( $instance['show_author'] );
+		$show_date     = ! empty( $instance['show_date'] );
+		$show_excerpt  = ! empty( $instance['show_excerpt'] );
+		$view_all      = isset( $instance['view_all'] ) ? (bool) $instance['view_all'] : true;
 		?>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'keralamlivenews' ); ?></label>
@@ -74,6 +75,10 @@ class KLM_News_Widget extends WP_Widget {
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'offset' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'offset' ) ); ?>" type="number" min="0" max="50" value="<?php echo esc_attr( $offset ); ?>">
 		</p>
 		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'border_radius' ) ); ?>"><?php esc_html_e( 'Thumbnail Border Radius (px):', 'keralamlivenews' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'border_radius' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'border_radius' ) ); ?>" type="number" min="0" max="30" value="<?php echo esc_attr( $border_radius ); ?>">
+		</p>
+		<p>
 			<input class="checkbox" type="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_author' ) ); ?>" <?php checked( $show_author ); ?>>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'show_author' ) ); ?>"><?php esc_html_e( 'Show author name', 'keralamlivenews' ); ?></label>
 			<br>
@@ -90,16 +95,17 @@ class KLM_News_Widget extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance                 = array();
-		$instance['title']        = sanitize_text_field( $new_instance['title'] );
-		$instance['layout']       = sanitize_key( $new_instance['layout'] );
-		$instance['category']     = isset( $new_instance['category'] ) ? (int) $new_instance['category'] : 0;
-		$instance['count']        = isset( $new_instance['count'] ) ? max( 1, (int) $new_instance['count'] ) : 5;
-		$instance['offset']       = isset( $new_instance['offset'] ) ? max( 0, (int) $new_instance['offset'] ) : 0;
-		$instance['show_author']  = ! empty( $new_instance['show_author'] );
-		$instance['show_date']    = ! empty( $new_instance['show_date'] );
-		$instance['show_excerpt'] = ! empty( $new_instance['show_excerpt'] );
-		$instance['view_all']     = ! empty( $new_instance['view_all'] );
+		$instance                  = array();
+		$instance['title']         = sanitize_text_field( $new_instance['title'] );
+		$instance['layout']        = sanitize_key( $new_instance['layout'] );
+		$instance['category']      = isset( $new_instance['category'] ) ? (int) $new_instance['category'] : 0;
+		$instance['count']         = isset( $new_instance['count'] ) ? max( 1, (int) $new_instance['count'] ) : 5;
+		$instance['offset']        = isset( $new_instance['offset'] ) ? max( 0, (int) $new_instance['offset'] ) : 0;
+		$instance['border_radius'] = isset( $new_instance['border_radius'] ) ? max( 0, (int) $new_instance['border_radius'] ) : 4;
+		$instance['show_author']   = ! empty( $new_instance['show_author'] );
+		$instance['show_date']     = ! empty( $new_instance['show_date'] );
+		$instance['show_excerpt']  = ! empty( $new_instance['show_excerpt'] );
+		$instance['view_all']      = ! empty( $new_instance['view_all'] );
 		return $instance;
 	}
 
@@ -107,20 +113,23 @@ class KLM_News_Widget extends WP_Widget {
 	/* FRONT END                                                         */
 	/* ---------------------------------------------------------------- */
 	public function widget( $args, $instance ) {
-		$layout       = isset( $instance['layout'] ) ? $instance['layout'] : 'list';
-		$category     = isset( $instance['category'] ) ? (int) $instance['category'] : 0;
-		$count        = isset( $instance['count'] ) ? max( 1, (int) $instance['count'] ) : 5;
-		$offset       = isset( $instance['offset'] ) ? max( 0, (int) $instance['offset'] ) : 0;
-		$show_author  = ! empty( $instance['show_author'] );
-		$show_date    = ! empty( $instance['show_date'] );
-		$show_excerpt = ! empty( $instance['show_excerpt'] );
-		$view_all     = ! empty( $instance['view_all'] );
+		$layout        = isset( $instance['layout'] ) ? $instance['layout'] : 'list';
+		$category      = isset( $instance['category'] ) ? (int) $instance['category'] : 0;
+		$count         = isset( $instance['count'] ) ? max( 1, (int) $instance['count'] ) : 5;
+		$offset        = isset( $instance['offset'] ) ? max( 0, (int) $instance['offset'] ) : 0;
+		$border_radius = isset( $instance['border_radius'] ) ? (int) $instance['border_radius'] : 4;
+		$show_author   = ! empty( $instance['show_author'] );
+		$show_date     = ! empty( $instance['show_date'] );
+		$show_excerpt  = ! empty( $instance['show_excerpt'] );
+		$view_all      = ! empty( $instance['view_all'] );
 
 		if ( ! $category ) {
 			return;
 		}
 
 		echo $args['before_widget']; // phpcs:ignore
+
+		echo '<div class="klm-widget-content" style="--klm-widget-radius: ' . esc_attr( $border_radius ) . 'px;">';
 
 		if ( ! empty( $instance['title'] ) ) {
 			$title = $instance['title'];
@@ -160,6 +169,8 @@ class KLM_News_Widget extends WP_Widget {
 				$this->render_list( $category, $count, $offset, $show_author, $show_date );
 				break;
 		}
+
+		echo '</div>'; // close klm-widget-content
 
 		echo $args['after_widget']; // phpcs:ignore
 	}

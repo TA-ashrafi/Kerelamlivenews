@@ -1,6 +1,6 @@
 <?php
 /**
- * Comments template.
+ * Comments & "Leave a Reply" Form.
  *
  * @package KeralamLiveNews
  */
@@ -24,8 +24,9 @@ if ( post_password_required() ) {
 			<?php
 			wp_list_comments(
 				array(
-					'style'      => 'ol',
-					'short_ping' => true,
+					'style'       => 'ol',
+					'short_ping'  => true,
+					'avatar_size' => 50,
 				)
 			);
 			?>
@@ -34,8 +35,19 @@ if ( post_password_required() ) {
 	<?php endif; ?>
 
 	<?php if ( ! comments_open() && get_comments_number() ) : ?>
-		<p class="klm-comments__closed"><?php esc_html_e( 'Comments are closed.', 'keralamlivenews' ); ?></p>
+		<p class="klm-comments__closed"><?php esc_html_e( 'Comments are closed for this article.', 'keralamlivenews' ); ?></p>
 	<?php endif; ?>
 
-	<?php comment_form(); ?>
+	<?php
+	comment_form(
+		array(
+			'title_reply'     => __( 'Leave a Reply', 'keralamlivenews' ),
+			'title_reply_to'  => __( 'Leave a Reply to %s', 'keralamlivenews' ),
+			'class_container' => 'klm-comment-form-container',
+			'class_form'      => 'klm-comment-form',
+			'class_submit'    => 'klm-comment-submit-btn',
+			'comment_field'   => '<p class="klm-comment-form-field"><label for="comment">' . __( 'Comment *', 'keralamlivenews' ) . '</label><textarea id="comment" name="comment" cols="45" rows="5" required></textarea></p>',
+		)
+	);
+	?>
 </div>

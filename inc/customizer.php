@@ -114,13 +114,29 @@ function klm_customize_register( $wp_customize ) {
 	$wp_customize->add_control(
 		'klm_border_radius',
 		array(
-			'label'       => __( 'Image Border Radius (px)', 'keralamlivenews' ),
-			'description' => __( 'Set corner rounding for post thumbnails (0px to 20px).', 'keralamlivenews' ),
+			'label'       => __( 'Default Image Border Radius (px)', 'keralamlivenews' ),
+			'description' => __( 'Set corner rounding for general post thumbnails (0px to 20px).', 'keralamlivenews' ),
 			'section'     => 'klm_layout_design',
 			'type'        => 'number',
 			'input_attrs' => array(
 				'min'  => 0,
 				'max'  => 20,
+				'step' => 1,
+			),
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_logo_border_radius', array( 'default' => 0, 'sanitize_callback' => 'absint' ) );
+	$wp_customize->add_control(
+		'klm_logo_border_radius',
+		array(
+			'label'       => __( 'Logo Border Radius (px)', 'keralamlivenews' ),
+			'description' => __( 'Set corner rounding specifically for site logo (0px for sharp corners).', 'keralamlivenews' ),
+			'section'     => 'klm_layout_design',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 0,
+				'max'  => 50,
 				'step' => 1,
 			),
 		)
@@ -236,7 +252,7 @@ function klm_customize_register( $wp_customize ) {
 		)
 	);
 
-	$wp_customize->add_setting( 'klm_footer_credit', array( 'default' => __( 'Made with love by Tahseen Ashrafi', 'keralamlivenews' ), 'sanitize_callback' => 'sanitize_text_field' ) );
+	$wp_customize->add_setting( 'klm_footer_credit', array( 'default' => __( 'Made with ❤️ by Tahseen Ashrafi', 'keralamlivenews' ), 'sanitize_callback' => 'sanitize_text_field' ) );
 	$wp_customize->add_control(
 		'klm_footer_credit',
 		array(

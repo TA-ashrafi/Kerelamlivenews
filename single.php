@@ -1,7 +1,7 @@
 <?php
 /**
  * Single post — "Open Story" layout: breadcrumb, title, meta line,
- * featured image, content, share icons, sidebar.
+ * featured image, content, author bio box, share icons, sidebar.
  *
  * @package KeralamLiveNews
  */
@@ -56,6 +56,22 @@ $show_readtime = get_theme_mod( 'klm_single_show_readtime', true );
 					)
 				);
 				?>
+
+				<!-- Author Bio Box -->
+				<div class="klm-author-box">
+					<div class="klm-author-box__avatar">
+						<?php echo get_avatar( get_the_author_meta( 'user_email' ), 80, '', get_the_author() ); ?>
+					</div>
+					<div class="klm-author-box__info">
+						<h3 class="klm-author-box__name"><?php echo esc_html( get_the_author() ); ?></h3>
+						<p class="klm-author-box__bio">
+							<?php
+							$bio = get_the_author_meta( 'description' );
+							echo esc_html( $bio ? $bio : __( 'Journalist and News Editor at Keralam Live News.', 'keralamlivenews' ) );
+							?>
+						</p>
+					</div>
+				</div>
 			</article>
 
 			<?php if ( comments_open() || get_comments_number() ) : ?>
