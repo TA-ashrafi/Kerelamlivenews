@@ -102,6 +102,27 @@ function klm_category_dropdown( $name, $selected = '', $id = '' ) {
 	echo '</select>';
 }
 
+/** Post view tracking for Most Viewed post query. */
+function klm_set_post_views( $post_id ) {
+	$count_key = 'klm_post_views';
+	$count     = get_post_meta( $post_id, $count_key, true );
+	if ( '' === $count ) {
+		$count = 1;
+		delete_post_meta( $post_id, $count_key );
+		add_post_meta( $post_id, $count_key, '1' );
+	} else {
+		$count++;
+		update_post_meta( $post_id, $count_key, $count );
+	}
+}
+
+function klm_track_post_views() {
+	if ( is_single() ) {
+		klm_set_post_views( get_the_ID() );
+	}
+}
+add_action( 'wp_head', 'klm_track_post_views' );
+
 /** Whether the sidebar has any widgets — used to decide layout width. */
 function klm_has_sidebar() {
 	return is_active_sidebar( 'sidebar-primary' );

@@ -142,6 +142,23 @@ function klm_excerpt_more( $more ) {
 }
 add_filter( 'excerpt_more', 'klm_excerpt_more' );
 
+/** Strip "Category:", "Tag:", "Author:" prefixes from archive titles. */
+function klm_archive_title_clean( $title ) {
+	if ( is_category() ) {
+		$title = single_cat_title( '', false );
+	} elseif ( is_tag() ) {
+		$title = single_tag_title( '', false );
+	} elseif ( is_author() ) {
+		$title = '<span class="vcard">' . get_the_author() . '</span>';
+	} elseif ( is_post_type_archive() ) {
+		$title = post_type_archive_title( '', false );
+	} elseif ( is_tax() ) {
+		$title = single_term_title( '', false );
+	}
+	return $title;
+}
+add_filter( 'get_the_archive_title', 'klm_archive_title_clean' );
+
 /** Fallback menu if no "primary" menu is assigned yet. */
 function klm_fallback_menu() {
 	echo '<ul class="klm-nav__menu">';

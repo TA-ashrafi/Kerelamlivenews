@@ -41,9 +41,10 @@ img, .klm-lead__top-img, .klm-lead__extra-img, .klm-lead__card-img, .klm-list__i
 .klm-header__search-panel{display:none;padding:12px 0;background:var(--klm-bg-alt);border-top:1px solid var(--klm-border);border-bottom:1px solid var(--klm-border);}
 .klm-header__search-panel.is-open{display:block;}
 
-/* Google Translate Box */
-.klm-translate-box{display:inline-block;font-size:12px;}
-.goog-te-gadget-simple{padding:3px 6px;border:1px solid var(--klm-border)!important;border-radius:4px;background:#fff!important;}
+/* Google Translate Script Box (Hidden on frontend for seamless background auto-detection) */
+.klm-translate-box{display:none!important;}
+.goog-te-banner-frame{display:none!important;}
+body{top:0!important;}
 
 .klm-nav{background:var(--klm-primary);}
 .klm-nav__inner{display:flex;align-items:center;}
