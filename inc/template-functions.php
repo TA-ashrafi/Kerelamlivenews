@@ -11,9 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Print the "Authored by X | date | N min read" meta line used on
- * single posts and inside widget blocks, respecting the show/hide
- * toggles that come from the Customizer (single posts) or from the
- * individual widget's own checkboxes (homepage/sidebar blocks).
+ * single posts and inside widget blocks.
  */
 function klm_post_meta( $show_author = true, $show_date = true, $show_readtime = false ) {
 	$bits = array();
@@ -78,7 +76,7 @@ function klm_breadcrumb() {
 	echo '</nav>';
 }
 
-/** Thumbnail with a graceful "No Image" placeholder, like the reference site. */
+/** Thumbnail with a graceful "No Image" placeholder. */
 function klm_thumbnail( $post_id, $size = 'medium', $class = '' ) {
 	if ( has_post_thumbnail( $post_id ) ) {
 		echo get_the_post_thumbnail( $post_id, $size, array( 'class' => esc_attr( $class ), 'loading' => 'lazy' ) );
@@ -104,7 +102,50 @@ function klm_category_dropdown( $name, $selected = '', $id = '' ) {
 	echo '</select>';
 }
 
-/** Whether the sidebar has any widgets — used to decide layout width and whether to print it at all. */
+/** Whether the sidebar has any widgets — used to decide layout width. */
 function klm_has_sidebar() {
 	return is_active_sidebar( 'sidebar-primary' );
 }
+
+/** AJAX Infinite Scroll Handler for category and archive pages. */
+function klm_ajax_load_more() {
+	check_ajax_referer( 'klm_nonce', 'nonce' );
+
+	$page      = isset( $_POST['page'] ) ? absint( $_POST['page'] ) : 1;
+	$cat_id    = isset( $_POST['cat_id'] ) ? absint( $_POST['cat_id'] ) : 0;
+	$show_auth = ! empty( $_POST['show_author'] );
+	$show_date = ! empty( $_POST['show_date'] );
+
+	$args = array(
+		'post_type'      => 'post',
+		'post_status'    => 'publish',
+		'paged'          => $page,
+		'posts_per_page' => get_option( 'posts_per_page', 12 ),
+	);
+
+	if ( $cat_id ) {
+		$args['cat'] = $cat_id;
+	}
+
+	$q = new WP_Query( $args );
+
+	if ( $q->have_posts() ) {
+		while ( $q->have_posts() ) {
+			$q->the_post();
+			?>
+			<article class="klm-archive__card">
+				<a href="<?php the_permalink(); ?>" class="klm-archive__card-link">
+					<?php klm_thumbnail( get_the_ID(), 'klm-square', 'klm-archive__card-img' ); ?>
+					<h3 class="klm-archive__card-title"><?php the_title(); ?></h3>
+				</a>
+				<p class="klm-archive__card-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 18 ) ); ?></p>
+				<?php klm_post_meta( $show_auth, $show_date ); ?>
+			</article>
+			<?php
+		}
+		wp_reset_postdata();
+	}
+	wp_die();
+}
+add_action( 'wp_ajax_klm_load_more', 'klm_ajax_load_more' );
+add_action( 'wp_ajax_nopriv_klm_load_more', 'klm_ajax_load_more' );

@@ -1,18 +1,21 @@
 <?php
 /**
- * Archive / category listing — "Menu Click" layout: breadcrumb, big
- * lead post, grid of the rest, sidebar.
+ * Archive / Category Page - Grid layout with Customizer Controls & Infinite Scroll.
  *
  * @package KeralamLiveNews
  */
 
 get_header();
-$has_sidebar = klm_has_sidebar();
 
-$show_author = get_theme_mod( 'klm_single_show_author', true );
-$show_date   = get_theme_mod( 'klm_single_show_date', true );
+$show_sidebar = get_theme_mod( 'klm_archive_show_sidebar', false ) && klm_has_sidebar();
+$cols         = get_theme_mod( 'klm_archive_columns', '4' );
+$show_author  = get_theme_mod( 'klm_archive_show_author', true );
+$show_date    = get_theme_mod( 'klm_archive_show_date', true );
+$current_cat  = get_queried_object_id();
+global $wp_query;
+$max_pages    = $wp_query->max_num_pages;
 ?>
-<div class="container klm-archive <?php echo $has_sidebar ? 'klm-archive--with-sidebar' : 'klm-archive--full'; ?>">
+<div class="container klm-archive <?php echo $show_sidebar ? 'klm-archive--with-sidebar' : 'klm-archive--full'; ?>">
 	<main class="klm-archive__main">
 		<?php klm_breadcrumb(); ?>
 		<h1 class="klm-archive__title"><?php the_archive_title(); ?></h1>
@@ -21,32 +24,32 @@ $show_date   = get_theme_mod( 'klm_single_show_date', true );
 		<?php endif; ?>
 
 		<?php if ( have_posts() ) : ?>
-			<div class="klm-archive__grid">
+			<div class="klm-archive__grid klm-archive__grid--cols-<?php echo esc_attr( $cols ); ?>" id="klm-archive-grid" data-cat="<?php echo esc_attr( $current_cat ); ?>" data-maxpages="<?php echo esc_attr( $max_pages ); ?>" data-showauthor="<?php echo esc_attr( $show_author ? 1 : 0 ); ?>" data-showdate="<?php echo esc_attr( $show_date ? 1 : 0 ); ?>">
 				<?php
-				$i = 0;
 				while ( have_posts() ) :
 					the_post();
-					$i++;
 					?>
-					<article <?php post_class( 0 === $i % 7 ? 'klm-archive__item klm-archive__item--wide' : 'klm-archive__item' ); ?>>
-						<a href="<?php the_permalink(); ?>">
-							<?php klm_thumbnail( get_the_ID(), 1 === $i ? 'klm-lead' : 'medium', 'klm-archive__img' ); ?>
-							<h2><?php the_title(); ?></h2>
+					<article <?php post_class( 'klm-archive__card' ); ?>>
+						<a href="<?php the_permalink(); ?>" class="klm-archive__card-link">
+							<?php klm_thumbnail( get_the_ID(), 'klm-square', 'klm-archive__card-img' ); ?>
+							<h3 class="klm-archive__card-title"><?php the_title(); ?></h3>
 						</a>
-						<?php if ( 1 === $i ) : ?>
-							<p class="klm-archive__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 26 ) ); ?></p>
-						<?php endif; ?>
+						<p class="klm-archive__card-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 18 ) ); ?></p>
 						<?php klm_post_meta( $show_author, $show_date ); ?>
 					</article>
 					<?php
 				endwhile;
 				?>
 			</div>
-			<div class="klm-pagination"><?php the_posts_pagination(); ?></div>
+
+			<div class="klm-infinite-scroll" id="klm-infinite-scroll">
+				<div class="klm-loader" id="klm-loader" style="display:none;"><?php esc_html_e( 'Loading more news…', 'keralamlivenews' ); ?></div>
+				<div class="klm-end-msg" id="klm-end-msg" style="display:none;"><?php esc_html_e( 'You have reached the end of news updates.', 'keralamlivenews' ); ?></div>
+			</div>
 		<?php else : ?>
-			<p><?php esc_html_e( 'No posts found in this section yet.', 'keralamlivenews' ); ?></p>
+			<p class="klm-empty-state"><?php esc_html_e( 'No posts found in this section yet.', 'keralamlivenews' ); ?></p>
 		<?php endif; ?>
 	</main>
-	<?php get_sidebar(); ?>
+	<?php if ( $show_sidebar ) { get_sidebar(); } ?>
 </div>
 <?php get_footer(); ?>

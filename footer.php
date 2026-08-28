@@ -1,6 +1,6 @@
 <?php
 /**
- * The footer for our theme.
+ * Modern Footer Layout.
  *
  * @package KeralamLiveNews
  */
@@ -12,35 +12,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 </div><!-- #klm-content -->
 
 <footer class="klm-footer">
-	<div class="container klm-footer__columns">
-		<?php for ( $i = 1; $i <= 4; $i++ ) : ?>
-			<?php if ( is_active_sidebar( 'footer-' . $i ) ) : ?>
-				<div class="klm-footer__col">
-					<?php dynamic_sidebar( 'footer-' . $i ); ?>
-				</div>
-			<?php endif; ?>
-		<?php endfor; ?>
-
-		<?php if ( ! is_active_sidebar( 'footer-1' ) && ! is_active_sidebar( 'footer-2' ) && ! is_active_sidebar( 'footer-3' ) && ! is_active_sidebar( 'footer-4' ) ) : ?>
-			<div class="klm-footer__col">
-				<h4><?php bloginfo( 'name' ); ?></h4>
-				<p><?php bloginfo( 'description' ); ?></p>
+	<div class="container klm-footer__inner">
+		<div class="klm-footer__columns">
+			<div class="klm-footer__col klm-footer__brand">
+				<?php if ( has_custom_logo() ) : ?>
+					<div class="klm-footer__logo"><?php the_custom_logo(); ?></div>
+				<?php else : ?>
+					<h3 class="klm-footer__title"><?php bloginfo( 'name' ); ?></h3>
+				<?php endif; ?>
+				<p class="klm-footer__desc"><?php bloginfo( 'description' ); ?></p>
 			</div>
-			<?php if ( has_nav_menu( 'footer' ) ) : ?>
+
+			<?php for ( $i = 1; $i <= 3; $i++ ) : ?>
 				<div class="klm-footer__col">
-					<h4><?php esc_html_e( 'Quick Links', 'keralamlivenews' ); ?></h4>
-					<?php
-					wp_nav_menu(
-						array(
-							'theme_location' => 'footer',
-							'container'      => false,
-							'menu_class'     => 'klm-footer__menu',
-						)
-					);
-					?>
+					<?php if ( is_active_sidebar( 'footer-' . $i ) ) : ?>
+						<?php dynamic_sidebar( 'footer-' . $i ); ?>
+					<?php else : ?>
+						<?php if ( 1 === $i && has_nav_menu( 'footer' ) ) : ?>
+							<h4 class="klm-footer__widget-title"><?php esc_html_e( 'Quick Links', 'keralamlivenews' ); ?></h4>
+							<?php
+							wp_nav_menu(
+								array(
+									'theme_location' => 'footer',
+									'container'      => false,
+									'menu_class'     => 'klm-footer__menu',
+								)
+							);
+							?>
+						<?php endif; ?>
+					<?php endif; ?>
 				</div>
-			<?php endif; ?>
-		<?php endif; ?>
+			<?php endfor; ?>
+		</div>
 	</div>
 
 	<div class="klm-footer__bottom">
