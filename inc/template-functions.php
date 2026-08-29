@@ -149,3 +149,15 @@ function klm_ajax_load_more() {
 }
 add_action( 'wp_ajax_klm_load_more', 'klm_ajax_load_more' );
 add_action( 'wp_ajax_nopriv_klm_load_more', 'klm_ajax_load_more' );
+
+/** Track single post view count for "Most View" option in widgets. */
+function klm_track_post_views() {
+	if ( is_single() ) {
+		global $post;
+		if ( isset( $post->ID ) ) {
+			$views = (int) get_post_meta( $post->ID, 'klm_post_views_count', true );
+			update_post_meta( $post->ID, 'klm_post_views_count', $views + 1 );
+		}
+	}
+}
+add_action( 'wp_head', 'klm_track_post_views' );

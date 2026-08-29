@@ -81,24 +81,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<div class="klm-header__right">
-			<div id="google_translate_element" class="klm-translate-box"></div>
-			<script type="text/javascript">
-			function googleTranslateElementInit() {
-				new google.translate.TranslateElement({
-					pageLanguage: 'ml',
-					includedLanguages: 'en,ml',
-					layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-				}, 'google_translate_element');
-			}
-			</script>
-			<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+			<div class="klm-lang-select-wrap">
+				<select id="klm-lang-switcher" class="klm-lang-select" aria-label="<?php esc_attr_e( 'Select Language', 'keralamlivenews' ); ?>" onchange="klmSwitchLanguage(this.value);">
+					<option value="ml"><?php esc_html_e( 'MALAYALAM', 'keralamlivenews' ); ?></option>
+					<option value="en"><?php esc_html_e( 'ENGLISH', 'keralamlivenews' ); ?></option>
+				</select>
+				<div id="google_translate_element" style="display:none;"></div>
+				<script type="text/javascript">
+				function googleTranslateElementInit() {
+					new google.translate.TranslateElement({
+						pageLanguage: 'ml',
+						includedLanguages: 'en,ml',
+						autoDisplay: false
+					}, 'google_translate_element');
+				}
+				function klmSwitchLanguage(lang) {
+					var select = document.querySelector('.goog-te-combo');
+					if (select) {
+						select.value = lang;
+						select.dispatchEvent(new Event('change'));
+					}
+				}
+				</script>
+				<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+			</div>
 
 			<?php if ( get_theme_mod( 'klm_header_right_text', '' ) ) : ?>
 				<span class="klm-header__right-text"><?php echo esc_html( get_theme_mod( 'klm_header_right_text' ) ); ?></span>
 			<?php endif; ?>
 			<?php if ( get_theme_mod( 'klm_header_show_search', true ) ) : ?>
 				<button type="button" class="klm-header__search-toggle" aria-label="<?php esc_attr_e( 'Search', 'keralamlivenews' ); ?>" aria-expanded="false">
-					<span aria-hidden="true">&#128269;</span>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
 				</button>
 			<?php endif; ?>
 		</div>

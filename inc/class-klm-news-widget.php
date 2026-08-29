@@ -41,6 +41,7 @@ class KLM_News_Widget extends WP_Widget {
 	public function form( $instance ) {
 		$title        = isset( $instance['title'] ) ? $instance['title'] : '';
 		$layout       = isset( $instance['layout'] ) ? $instance['layout'] : 'list';
+		$post_order   = isset( $instance['post_order'] ) ? $instance['post_order'] : 'latest';
 		$category     = isset( $instance['category'] ) ? (int) $instance['category'] : 0;
 		$count        = isset( $instance['count'] ) ? (int) $instance['count'] : 5;
 		$offset       = isset( $instance['offset'] ) ? (int) $instance['offset'] : 0;
@@ -62,6 +63,14 @@ class KLM_News_Widget extends WP_Widget {
 			</select>
 		</p>
 		<p>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'post_order' ) ); ?>"><?php esc_html_e( 'Post Order / Type:', 'keralamlivenews' ); ?></label>
+			<select class="widefat klm-post-order-select" id="<?php echo esc_attr( $this->get_field_id( 'post_order' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'post_order' ) ); ?>" onchange="if(this.value==='random'){this.form.querySelector('.klm-cat-wrap').style.opacity='0.5';this.form.querySelector('.klm-cat-wrap select').disabled=true;}else{this.form.querySelector('.klm-cat-wrap').style.opacity='1';this.form.querySelector('.klm-cat-wrap select').disabled=false;}">
+				<option value="latest" <?php selected( $post_order, 'latest' ); ?>><?php esc_html_e( 'Latest Post', 'keralamlivenews' ); ?></option>
+				<option value="most_viewed" <?php selected( $post_order, 'most_viewed' ); ?>><?php esc_html_e( 'Most View', 'keralamlivenews' ); ?></option>
+				<option value="random" <?php selected( $post_order, 'random' ); ?>><?php esc_html_e( 'Random Post', 'keralamlivenews' ); ?></option>
+			</select>
+		</p>
+		<p class="klm-cat-wrap" style="<?php echo ( 'random' === $post_order ) ? 'opacity:0.5;' : ''; ?>">
 			<label for="<?php echo esc_attr( $this->get_field_id( 'category' ) ); ?>"><?php esc_html_e( 'Category:', 'keralamlivenews' ); ?></label>
 			<?php klm_category_dropdown( $this->get_field_name( 'category' ), $category, $this->get_field_id( 'category' ) ); ?>
 		</p>
@@ -93,6 +102,7 @@ class KLM_News_Widget extends WP_Widget {
 		$instance                 = array();
 		$instance['title']        = sanitize_text_field( $new_instance['title'] );
 		$instance['layout']       = sanitize_key( $new_instance['layout'] );
+		$instance['post_order']   = in_array( $new_instance['post_order'], array( 'latest', 'most_viewed', 'random' ), true ) ? $new_instance['post_order'] : 'latest';
 		$instance['category']     = isset( $new_instance['category'] ) ? (int) $new_instance['category'] : 0;
 		$instance['count']        = isset( $new_instance['count'] ) ? max( 1, (int) $new_instance['count'] ) : 5;
 		$instance['offset']       = isset( $new_instance['offset'] ) ? max( 0, (int) $new_instance['offset'] ) : 0;
@@ -108,6 +118,7 @@ class KLM_News_Widget extends WP_Widget {
 	/* ---------------------------------------------------------------- */
 	public function widget( $args, $instance ) {
 		$layout       = isset( $instance['layout'] ) ? $instance['layout'] : 'list';
+		$post_order   = isset( $instance['post_order'] ) ? $instance['post_order'] : 'latest';
 		$category     = isset( $instance['category'] ) ? (int) $instance['category'] : 0;
 		$count        = isset( $instance['count'] ) ? max( 1, (int) $instance['count'] ) : 5;
 		$offset       = isset( $instance['offset'] ) ? max( 0, (int) $instance['offset'] ) : 0;
@@ -116,7 +127,7 @@ class KLM_News_Widget extends WP_Widget {
 		$show_excerpt = ! empty( $instance['show_excerpt'] );
 		$view_all     = ! empty( $instance['view_all'] );
 
-		if ( ! $category ) {
+		if ( 'random' !== $post_order && ! $category ) {
 			return;
 		}
 
@@ -124,7 +135,7 @@ class KLM_News_Widget extends WP_Widget {
 
 		if ( ! empty( $instance['title'] ) ) {
 			$title = $instance['title'];
-			if ( $view_all && $category ) {
+			if ( $view_all && $category && 'random' !== $post_order ) {
 				$title .= ' <a class="klm-block__viewall" href="' . esc_url( get_category_link( $category ) ) . '">' . esc_html__( 'View All »', 'keralamlivenews' ) . '</a>';
 			}
 			echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore
@@ -132,55 +143,70 @@ class KLM_News_Widget extends WP_Widget {
 
 		switch ( $layout ) {
 			case 'lead':
-				$this->render_lead( $category, $count, $offset, $show_author, $show_date, $show_excerpt );
+				$this->render_lead( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order );
 				break;
 			case 'custom_grid':
-				$this->render_custom_grid( $category, $count, $offset, $show_author, $show_date, $show_excerpt );
+				$this->render_custom_grid( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order );
 				break;
 			case 'horizontal_5col':
-				$this->render_horizontal_5col( $category, $count, $offset, $show_author, $show_date, $show_excerpt );
+				$this->render_horizontal_5col( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order );
 				break;
 			case 'sidebar_cards':
-				$this->render_sidebar_cards( $category, $count, $offset, $show_author, $show_date, $show_excerpt );
+				$this->render_sidebar_cards( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order );
 				break;
 			case 'magazine':
-				$this->render_magazine( $category, $count, $offset, $show_author, $show_date, $show_excerpt );
+				$this->render_magazine( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order );
 				break;
 			case 'fourcol':
-				$this->render_fourcol( $category, $count, $offset, $show_author, $show_date );
+				$this->render_fourcol( $category, $count, $offset, $show_author, $show_date, $post_order );
 				break;
 			case 'video':
-				$this->render_video( $category, $count, $offset );
+				$this->render_video( $category, $count, $offset, $post_order );
 				break;
 			case 'gallery':
-				$this->render_gallery( $category, $count, $offset );
+				$this->render_gallery( $category, $count, $offset, $post_order );
 				break;
 			case 'list':
 			default:
-				$this->render_list( $category, $count, $offset, $show_author, $show_date );
+				$this->render_list( $category, $count, $offset, $show_author, $show_date, $post_order );
 				break;
 		}
 
 		echo $args['after_widget']; // phpcs:ignore
 	}
 
-	private function query( $category, $count, $offset = 0 ) {
+	private function query( $category, $count, $offset = 0, $post_order = 'latest' ) {
 		$args = array(
 			'posts_per_page'      => $count,
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
 		);
-		if ( $category ) {
-			$args['cat'] = $category;
+
+		if ( 'random' === $post_order ) {
+			$args['orderby'] = 'rand';
+		} else {
+			if ( $category ) {
+				$args['cat'] = $category;
+			}
+			if ( $offset > 0 ) {
+				$args['offset'] = $offset;
+			}
+
+			if ( 'most_viewed' === $post_order ) {
+				$args['meta_key'] = 'klm_post_views_count';
+				$args['orderby']  = 'meta_value_num date';
+				$args['order']    = 'DESC';
+			} else {
+				$args['orderby'] = 'date';
+				$args['order']   = 'DESC';
+			}
 		}
-		if ( $offset > 0 ) {
-			$args['offset'] = $offset;
-		}
+
 		return new WP_Query( $args );
 	}
 
-	private function render_custom_grid( $category, $count, $offset, $show_author, $show_date, $show_excerpt ) {
-		$q = $this->query( $category, max( 6, $count ), $offset );
+	private function render_custom_grid( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order = 'latest' ) {
+		$q = $this->query( $category, max( 6, $count ), $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -268,8 +294,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_horizontal_5col( $category, $count, $offset, $show_author, $show_date, $show_excerpt ) {
-		$q = $this->query( $category, max( 5, $count ), $offset );
+	private function render_horizontal_5col( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order = 'latest' ) {
+		$q = $this->query( $category, max( 5, $count ), $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -293,8 +319,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_sidebar_cards( $category, $count, $offset, $show_author, $show_date, $show_excerpt ) {
-		$q = $this->query( $category, max( 3, $count ), $offset );
+	private function render_sidebar_cards( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order = 'latest' ) {
+		$q = $this->query( $category, max( 3, $count ), $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -348,8 +374,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_lead( $category, $count, $offset, $show_author, $show_date, $show_excerpt ) {
-		$q = $this->query( $category, max( 5, $count ), $offset );
+	private function render_lead( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order = 'latest' ) {
+		$q = $this->query( $category, max( 5, $count ), $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -403,8 +429,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_list( $category, $count, $offset, $show_author, $show_date ) {
-		$q = $this->query( $category, $count, $offset );
+	private function render_list( $category, $count, $offset, $show_author, $show_date, $post_order = 'latest' ) {
+		$q = $this->query( $category, $count, $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -425,8 +451,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_magazine( $category, $count, $offset, $show_author, $show_date, $show_excerpt ) {
-		$q = $this->query( $category, max( 3, $count ), $offset );
+	private function render_magazine( $category, $count, $offset, $show_author, $show_date, $show_excerpt, $post_order = 'latest' ) {
+		$q = $this->query( $category, max( 3, $count ), $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -470,8 +496,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_fourcol( $category, $count, $offset, $show_author, $show_date ) {
-		$q = $this->query( $category, max( 4, $count ), $offset );
+	private function render_fourcol( $category, $count, $offset, $show_author, $show_date, $post_order = 'latest' ) {
+		$q = $this->query( $category, max( 4, $count ), $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -496,8 +522,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_video( $category, $count, $offset ) {
-		$q = $this->query( $category, $count, $offset );
+	private function render_video( $category, $count, $offset, $post_order = 'latest' ) {
+		$q = $this->query( $category, $count, $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
@@ -521,8 +547,8 @@ class KLM_News_Widget extends WP_Widget {
 		wp_reset_postdata();
 	}
 
-	private function render_gallery( $category, $count, $offset ) {
-		$q = $this->query( $category, $count, $offset );
+	private function render_gallery( $category, $count, $offset, $post_order = 'latest' ) {
+		$q = $this->query( $category, $count, $offset, $post_order );
 		if ( ! $q->have_posts() ) {
 			return;
 		}
