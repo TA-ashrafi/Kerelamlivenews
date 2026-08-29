@@ -70,7 +70,7 @@ h1, h2, h3, h4, h5, h6,
 .klm-nav__toggle span{display:block;height:2px;background:#fff;}
 
 /* ---------- Layout shell ---------- */
-.klm-site-content{width:100%;overflow-x:hidden;}
+.klm-site-content{width:100%;}
 .klm-home,.klm-single,.klm-archive{padding:20px 16px;width:100%;box-sizing:border-box;}
 .klm-home--with-sidebar,.klm-single--with-sidebar,.klm-archive--with-sidebar{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:start;}
 .klm-home--full .klm-home__main,.klm-single--full .klm-single__main,.klm-archive--full .klm-archive__main{width:100%;margin:0 auto;}
@@ -177,7 +177,7 @@ h1, h2, h3, h4, h5, h6,
 .klm-social-btn--yt{background:#ff0000;}
 
 /* ---------- Sidebar ---------- */
-.klm-sidebar{display:flex;flex-direction:column;gap:20px;position:sticky;top:16px;width:100%;}
+.klm-sidebar{display:flex;flex-direction:column;gap:20px;position:sticky;top:16px;align-self:start;width:100%;}
 .klm-sidebar-widget__title{font-size:15px;font-weight:800;text-transform:uppercase;color:var(--klm-primary);border-bottom:2px solid var(--klm-primary);padding-bottom:6px;margin-bottom:10px;}
 .klm-ad{background:var(--klm-bg-alt);border:1px dashed var(--klm-border);color:var(--klm-muted);text-align:center;padding:40px 10px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;max-width:100%;overflow:hidden;}
 

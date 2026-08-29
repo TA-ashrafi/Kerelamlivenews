@@ -83,8 +83,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="klm-header__right">
 			<div class="klm-lang-select-wrap">
 				<select id="klm-lang-switcher" class="klm-lang-select" aria-label="<?php esc_attr_e( 'Select Language', 'keralamlivenews' ); ?>" onchange="klmSwitchLanguage(this.value);">
+					<option value="en" selected><?php esc_html_e( 'ENGLISH', 'keralamlivenews' ); ?></option>
 					<option value="ml"><?php esc_html_e( 'MALAYALAM', 'keralamlivenews' ); ?></option>
-					<option value="en"><?php esc_html_e( 'ENGLISH', 'keralamlivenews' ); ?></option>
 				</select>
 				<div id="google_translate_element" style="display:none;"></div>
 				<script type="text/javascript">
