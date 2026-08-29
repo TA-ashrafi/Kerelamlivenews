@@ -41,7 +41,12 @@ the Free Software Foundation; either version 2 of the License, or
   --klm-font-head:"Noto Sans",Georgia,"Times New Roman",serif;
 }
 *,*::before,*::after{box-sizing:border-box;}
-html{-webkit-text-size-adjust:100%;}
+html, body{
+  -webkit-text-size-adjust:100%;
+  overflow-x:hidden;
+  width:100%;
+  max-width:100%;
+}
 body{
   margin:0;
   font-family:var(--klm-font-body);
@@ -49,12 +54,12 @@ body{
   background:var(--klm-bg);
   line-height:1.5;
 }
-img{max-width:100%;height:auto;display:block;}
+img, iframe, object, embed, video{max-width:100%;height:auto;display:block;}
 a{color:var(--klm-link);text-decoration:none;}
 a:hover{text-decoration:underline;}
 ul{margin:0;padding:0;list-style:none;}
 h1,h2,h3,h4,h5,h6{font-family:var(--klm-font-head);margin:0 0 .5em;line-height:1.25;}
 .screen-reader-text{position:absolute!important;left:-9999px;top:-9999px;}
 :focus-visible{outline:3px solid var(--klm-primary);outline-offset:2px;}
-.container{max-width:1200px;margin:0 auto;padding:0 16px;}
+.container{width:100%;max-width:1200px;margin:0 auto;padding:0 16px;box-sizing:border-box;}
 button{font-family:inherit;cursor:pointer;}
