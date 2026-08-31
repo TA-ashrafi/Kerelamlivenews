@@ -55,8 +55,8 @@ body{
   line-height:1.5;
 }
 img, iframe, object, embed, video{max-width:100%;height:auto;display:block;}
-a{color:var(--klm-link);text-decoration:none;}
-a:hover{text-decoration:underline;}
+a{color:var(--klm-text);text-decoration:none;}
+a:hover{text-decoration:none!important;color:inherit;}
 ul{margin:0;padding:0;list-style:none;}
 h1,h2,h3,h4,h5,h6{font-family:var(--klm-font-head);margin:0 0 .5em;line-height:1.25;}
 .screen-reader-text{position:absolute!important;left:-9999px;top:-9999px;}

@@ -149,3 +149,42 @@ function klm_ajax_load_more() {
 }
 add_action( 'wp_ajax_klm_load_more', 'klm_ajax_load_more' );
 add_action( 'wp_ajax_nopriv_klm_load_more', 'klm_ajax_load_more' );
+
+/** Track single post view count for "Most View" option in widgets. */
+function klm_track_post_views() {
+	if ( is_single() ) {
+		global $post;
+		if ( isset( $post->ID ) ) {
+			$views = (int) get_post_meta( $post->ID, 'klm_post_views_count', true );
+			update_post_meta( $post->ID, 'klm_post_views_count', $views + 1 );
+		}
+	}
+}
+add_action( 'wp_head', 'klm_track_post_views' );
+
+/** Custom Login Slug Handler: Allow custom login URL via Customizer setting (e.g. /mysite). */
+function klm_custom_login_slug_handler() {
+	$slug = get_theme_mod( 'klm_custom_login_slug', '' );
+	if ( empty( $slug ) ) {
+		return;
+	}
+
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$path        = trim( parse_url( $request_uri, PHP_URL_PATH ), '/' );
+
+	if ( $path === $slug ) {
+		require_once ABSPATH . 'wp-login.php';
+		exit;
+	}
+}
+add_action( 'init', 'klm_custom_login_slug_handler' );
+
+function klm_custom_login_url_rewrite( $url, $path = '', $scheme = '' ) {
+	$slug = get_theme_mod( 'klm_custom_login_slug', '' );
+	if ( ! empty( $slug ) && strpos( $url, 'wp-login.php' ) !== false && strpos( $url, 'action=' ) === false ) {
+		return home_url( '/' . $slug );
+	}
+	return $url;
+}
+add_filter( 'login_url', 'klm_custom_login_url_rewrite', 10, 3 );
+add_filter( 'site_url', 'klm_custom_login_url_rewrite', 10, 3 );
