@@ -227,6 +227,26 @@ function klm_customize_register( $wp_customize ) {
 		)
 	);
 
+	/* ---------- Security & Custom Login Slug ---------- */
+	$wp_customize->add_section(
+		'klm_security',
+		array(
+			'title'    => __( 'Security / Custom Login Slug', 'keralamlivenews' ),
+			'priority' => 45,
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_custom_login_slug', array( 'default' => '', 'sanitize_callback' => 'sanitize_title' ) );
+	$wp_customize->add_control(
+		'klm_custom_login_slug',
+		array(
+			'label'       => __( 'Custom Login Slug', 'keralamlivenews' ),
+			'description' => __( 'Enter a custom slug (e.g. "mysite" or "my-login") to access login page via example.com/mysite instead of default wp-login.php.', 'keralamlivenews' ),
+			'section'     => 'klm_security',
+			'type'        => 'text',
+		)
+	);
+
 	/* ---------- Footer ---------- */
 	$wp_customize->add_section(
 		'klm_footer',
