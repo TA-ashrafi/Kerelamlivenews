@@ -161,30 +161,3 @@ function klm_track_post_views() {
 	}
 }
 add_action( 'wp_head', 'klm_track_post_views' );
-
-/** Custom Login Slug Handler: Allow custom login URL via Customizer setting (e.g. /mysite). */
-function klm_custom_login_slug_handler() {
-	$slug = get_theme_mod( 'klm_custom_login_slug', '' );
-	if ( empty( $slug ) ) {
-		return;
-	}
-
-	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-	$path        = trim( parse_url( $request_uri, PHP_URL_PATH ), '/' );
-
-	if ( $path === $slug ) {
-		require_once ABSPATH . 'wp-login.php';
-		exit;
-	}
-}
-add_action( 'init', 'klm_custom_login_slug_handler' );
-
-function klm_custom_login_url_rewrite( $url, $path = '', $scheme = '' ) {
-	$slug = get_theme_mod( 'klm_custom_login_slug', '' );
-	if ( ! empty( $slug ) && strpos( $url, 'wp-login.php' ) !== false && strpos( $url, 'action=' ) === false ) {
-		return home_url( '/' . $slug );
-	}
-	return $url;
-}
-add_filter( 'login_url', 'klm_custom_login_url_rewrite', 10, 3 );
-add_filter( 'site_url', 'klm_custom_login_url_rewrite', 10, 3 );
