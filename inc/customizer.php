@@ -231,12 +231,106 @@ function klm_customize_register( $wp_customize ) {
 	$wp_customize->add_section(
 		'klm_footer',
 		array(
-			'title'    => __( 'Footer', 'keralamlivenews' ),
+			'title'    => __( 'Footer & Social Media', 'keralamlivenews' ),
 			'priority' => 40,
 		)
 	);
 
-	$wp_customize->add_setting( 'klm_footer_credit', array( 'default' => __( 'Made with love by Tahseen Ashrafi', 'keralamlivenews' ), 'sanitize_callback' => 'sanitize_text_field' ) );
+	/* Separate Footer Logo */
+	$wp_customize->add_setting( 'klm_footer_logo', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control(
+		new WP_Customize_Image_Control(
+			$wp_customize,
+			'klm_footer_logo',
+			array(
+				'label'       => __( 'Footer Custom Logo', 'keralamlivenews' ),
+				'description' => __( 'Upload a separate custom logo specifically for the footer.', 'keralamlivenews' ),
+				'section'     => 'klm_footer',
+			)
+		)
+	);
+
+	/* Footer Logo Width */
+	$wp_customize->add_setting( 'klm_footer_logo_width', array( 'default' => 200, 'sanitize_callback' => 'absint' ) );
+	$wp_customize->add_control(
+		'klm_footer_logo_width',
+		array(
+			'label'       => __( 'Footer Logo Width (px)', 'keralamlivenews' ),
+			'description' => __( 'Adjust footer logo width (50px to 400px).', 'keralamlivenews' ),
+			'section'     => 'klm_footer',
+			'type'        => 'number',
+			'input_attrs' => array(
+				'min'  => 50,
+				'max'  => 400,
+				'step' => 5,
+			),
+		)
+	);
+
+	/* Footer About Title & Text */
+	$wp_customize->add_setting( 'klm_footer_about_title', array( 'default' => __( 'ABOUT US CONTENT', 'keralamlivenews' ), 'sanitize_callback' => 'sanitize_text_field' ) );
+	$wp_customize->add_control(
+		'klm_footer_about_title',
+		array(
+			'label'   => __( 'About Section Title', 'keralamlivenews' ),
+			'section' => 'klm_footer',
+			'type'    => 'text',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_footer_about_text', array( 'default' => __( 'Welcome to Keralam Live News. Delivering latest headlines, trending stories, and in-depth news coverage daily.', 'keralamlivenews' ), 'sanitize_callback' => 'sanitize_textarea_field' ) );
+	$wp_customize->add_control(
+		'klm_footer_about_text',
+		array(
+			'label'   => __( 'About Us Description', 'keralamlivenews' ),
+			'section' => 'klm_footer',
+			'type'    => 'textarea',
+		)
+	);
+
+	/* Footer Social Media Links */
+	$wp_customize->add_setting( 'klm_social_facebook', array( 'default' => '#', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control(
+		'klm_social_facebook',
+		array(
+			'label'   => __( 'Facebook Page URL', 'keralamlivenews' ),
+			'section' => 'klm_footer',
+			'type'    => 'url',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_social_instagram', array( 'default' => '#', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control(
+		'klm_social_instagram',
+		array(
+			'label'   => __( 'Instagram Profile URL', 'keralamlivenews' ),
+			'section' => 'klm_footer',
+			'type'    => 'url',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_social_youtube', array( 'default' => '#', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control(
+		'klm_social_youtube',
+		array(
+			'label'   => __( 'YouTube Channel URL', 'keralamlivenews' ),
+			'section' => 'klm_footer',
+			'type'    => 'url',
+		)
+	);
+
+	$wp_customize->add_setting( 'klm_social_x', array( 'default' => '#', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control(
+		'klm_social_x',
+		array(
+			'label'   => __( 'X (Twitter) Profile URL', 'keralamlivenews' ),
+			'section' => 'klm_footer',
+			'type'    => 'url',
+		)
+	);
+
+	/* Bottom credit */
+	$wp_customize->add_setting( 'klm_footer_credit', array( 'default' => __( 'Made with ❤️ by Tahseen Ashrafi', 'keralamlivenews' ), 'sanitize_callback' => 'sanitize_text_field' ) );
 	$wp_customize->add_control(
 		'klm_footer_credit',
 		array(

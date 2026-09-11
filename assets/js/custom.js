@@ -1,6 +1,6 @@
 /**
  * KeralamLiveNews front-end interactions:
- * mobile nav toggle, header search toggle, strip arrows, AJAX infinite scroll.
+ * mobile nav toggle, header search toggle, strip arrows, AJAX infinite scroll, back-to-top.
  *
  * @package KeralamLiveNews
  */
@@ -32,6 +32,14 @@
 						field.focus();
 					}
 				}
+			} );
+		}
+
+		/* Back to top button */
+		var backToTopBtn = document.getElementById( 'klm-back-to-top' );
+		if ( backToTopBtn ) {
+			backToTopBtn.addEventListener( 'click', function () {
+				window.scrollTo( { top: 0, behavior: 'smooth' } );
 			} );
 		}
 
